@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  devtool:
+    build:
+      context: './devtool'
+    tty: true
+    volumes:
+      - './git_repository:/root/git_repository'
+      - '.:/root/workspace'
+      - '~/.ssh:/root/.ssh'
+    working_dir: '/root'
