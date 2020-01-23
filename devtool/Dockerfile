@@ -55,10 +55,12 @@ RUN --mount=type=cache,dst=/var/cache/apt --mount=type=cache,dst=/var/lib/apt \
  && apt install -y lazygit
 
 # Neovim のインストール
-RUN --mount=type=cache,dst=/var/cache/apt --mount=type=cache,dst=/var/lib/apt \
-    add-apt-repository -y ppa:neovim-ppa/stable \
- && apt update \
- && apt install -y neovim
+RUN wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage \
+ && chmod u+x ./nvim.appimage \
+ && ./nvim.appimage --appimage-extract \
+ && mv squashfs-root /usr/local/share/ \
+ && ln -s /usr/local/share/squashfs-root/usr/bin/nvim /usr/local/bin/nvim \
+ && rm ./nvim.appimage
 
 # fish のインストール
 RUN --mount=type=cache,dst=/var/cache/apt --mount=type=cache,dst=/var/lib/apt \
@@ -71,8 +73,15 @@ RUN --mount=type=cache,dst=$HOME/.cache/pip \
     pip install neovim
 
 # Neovim の設定
-RUN update-alternatives --install /usr/bin/vi     vi     /usr/bin/nvim 60
- && update-alternatives --install /usr/bin/vim    vim    /usr/bin/nvim 60
- && update-alternatives --install /usr/bin/editor editor /usr/bin/nvim 60
+RUN update-alternatives --install /usr/bin/vi     vi     /usr/local/bin/nvim 60 \
+ && update-alternatives --install /usr/bin/vim    vim    /usr/local/bin/nvim 60 \
+ && update-alternatives --install /usr/bin/editor editor /usr/local/bin/nvim 60
+RUN git clone https://github.com/huyu398/nvim.git /root/.config/nvim \
+ && nvim --headless -c UpdateRemotePlugins -c q
+
+# mdr のインストール
+RUN wget https://github.com/MichaelMure/mdr/releases/download/v0.2.2/mdr_linux_amd64 mdr \
+ && chmod u+x mdr \
+ && mv mdr /usr/local/bin/
 
 ENTRYPOINT ["fish"]
