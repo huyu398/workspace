@@ -79,6 +79,7 @@ RUN update-alternatives --install /usr/bin/vi     vi     /usr/local/bin/nvim 60 
 RUN git clone https://github.com/huyu398/nvim.git /root/.config/nvim \
  && nvim --headless -c UpdateRemotePlugins -c q
 
+COPY ./.gitconfig /root/.gitconfig
 # mdr のインストール
 RUN wget https://github.com/MichaelMure/mdr/releases/download/v0.2.2/mdr_linux_amd64 mdr \
  && chmod u+x mdr \
