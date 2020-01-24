@@ -8,4 +8,6 @@ services:
       - './git_repository:/root/git_repository'
       - '.:/root/workspace'
       - '~/.ssh:/root/.ssh'
+      - './devtool/config/fish:/root/.config/fish'
+      - './devtool/local/fish:/root/.local/share/fish'
     working_dir: '/root'
